@@ -1,5 +1,5 @@
+<%@page import="com.mongodb.DBObject"%>
 <%@page import="org.bson.types.ObjectId"%>
-<%@page import="org.bson.types.BSONTimestamp"%>
 <%@page import="com.mongodb.BasicDBObject"%>
 <%@page import="com.mongodb.DBCollection"%>
 <%@page import="com.mongodb.DB"%>
@@ -14,60 +14,80 @@
 </head>
 <body>
 	<%
+		String id = request.getParameter("id");
 		String action = "show_form";
-		Object id = null;
 		request.setCharacterEncoding("utf-8");
 		if (request.getParameter("title") != null) {
-
 			action = "save";
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
-
 			try {
-
 				Mongo mongo = new Mongo();
 				DB db = mongo.getDB("myblogdb");
 				DBCollection collection = db.getCollection("articles");
 				BasicDBObject obj = new BasicDBObject();
-				obj.append("title", title);
-				obj.append("content", content);
-				obj.append("saved_at", new BSONTimestamp());
+				obj.append("$set", new BasicDBObject().append("title", title).append("content", content));
+				BasicDBObject q = new BasicDBObject();
+				q.append("_id", new ObjectId(id));
 
-				collection.insert(obj);
-				id = (ObjectId) obj.get("_id");
+				collection.update(q, obj);
+
 				mongo.close();
-
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-
 		}
+		String title = "";
+		String content = "";
+		try {
+			Mongo mongo = new Mongo();
+			DB db = mongo.getDB("myblogdb");
+			DBCollection collection = db.getCollection("articles");
+			BasicDBObject ob = new BasicDBObject();
+			ob.append("_id", new ObjectId(id));
+			DBObject obj = collection.findOne(ob);
+			System.out.println("obj: " + obj);
 
+			title = (String) obj.get("title");
+			content = (String) obj.get("content");
+
+			out.println(title);
+			out.println(content);
+
+			mongo.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	%>
+
+	<%
 		if (action.equals("show_form")) {
 	%>
 	<div id="contentarea">
 		<div id="innercontentarea">
-			<h1>Blog Post Creator</h1>
-			<form action="blogInsert.jsp" method="post">
+			<h1>Blog Post Editor</h1>
+			<form action="blogEdit.jsp" method="post">
+				<input name="id" type="hidden" value="<%=id%>">
 				<h3>Title</h3>
 				<p>
-					<input type="text" name="title" id="title">
+					<input type="text" name="title" id="title" value="<%=title%>">
 				</p>
 				<h3>Content</h3>
-				<textarea rows="20" name="content"></textarea>
+				<textarea rows="20" name="content"><%=content%></textarea>
 				<p>
-					<input type="submit" value="Save" name="btn_submit">
+					<input type="submit" name="btn_submit" value="Save">
 				</p>
 			</form>
 		</div>
+
 	</div>
 	<%
 		} else {
 	%>
 	<p>
-		Article saved. _id :
+		Article.edited. _id :
 		<%=id%>
-		<a href="blogInsert.jsp">Write another one?</a>
+		<a href="blogDetail.jsp?id=<%=id%>">Read it.</a>
 	</p>
 	<%
 		}
