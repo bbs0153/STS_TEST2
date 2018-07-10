@@ -41,7 +41,16 @@ div#innercontentarea form textarea[name=content] {
 	width: 435px;
 }
 </style>
-
+<script type="text/javascript">
+	function confirmDelete(id) {
+		
+		var re = confirm("Are you sure you want to delete this articles");
+		if(re){
+			location.href = "blogDelete.jsp?id="+id;
+		}
+		
+	}
+</script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
@@ -72,8 +81,8 @@ div#innercontentarea form textarea[name=content] {
 			<table class="articles" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th width="55%">Title</th>
-						<th width="27%">Created at</th>
+						<th width="40%">Title</th>
+						<th width="30%">Created at</th>
 						<th width="*">Action</th>
 					</tr>
 				</thead>
@@ -85,8 +94,11 @@ div#innercontentarea form textarea[name=content] {
 					<tr>
 						<td><%=ob.get("title")%></td>
 						<td><%=ob.get("saved_at")%></td>
-						<td><a href="blogDetail.jsp?id=<%=ob.get("_id")%>">View</a></td>
-						<td><a href="blogEdit.jsp?id=<%=ob.get("_id")%>">Edit</a></td>
+						<td>
+							<a href="blogDetail.jsp?id=<%=ob.get("_id")%>"> View</a>
+							<a href="blogEdit.jsp?id=<%=ob.get("_id")%>"> Edit</a>
+							<a href="#" onclick="confirmDelete('<%=ob.get("_id")%>')"> Delete</a>
+						</td>
 					</tr>
 					<%
 						}
@@ -104,7 +116,7 @@ div#innercontentarea form textarea[name=content] {
 			<div class="prev">
 				<%
 					if (currentPage != 1) {
-				%>
+				%>P
 				<a href="dashBoard.jsp?page=<%=currentPage - 1%>">Prev</a>
 				<%
 					}
