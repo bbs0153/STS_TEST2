@@ -14,9 +14,9 @@
 </head>
 <body>
 	<%
-		String id = request.getParameter("id");
 		String action = "show_form";
 		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
 		if (request.getParameter("title") != null) {
 			action = "save";
 			String title = request.getParameter("title");
