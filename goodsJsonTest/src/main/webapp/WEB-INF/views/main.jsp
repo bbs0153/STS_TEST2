@@ -84,6 +84,10 @@
 			});
 
 		}
+		// 카트에 담길 상품의 인덱스를 증가시키기 위한 함수
+		var i = 0;
+		
+		
 		// 현재페이지에 보여줄 상품의 노드를 생성한다
 		var makeNode = function() {
 
@@ -112,7 +116,16 @@
 					if (c == "checked") {
 
 						var cd = $(d).clone();
+						
+						$(cd).find(".qty").attr("name","items["+i+"].qty");
+						$(cd).find(".no").attr("name","items["+i+"].no");
+						
+						var total = eval($("#total").val());
+						 $("#total").val(total + eval($(cd).find(".price").html())*eval($(cd).find(".qty").val()));
+						
 						$("#cart").append(cd);
+						i++;
+						
 					} else {
 						var pd = $(this).parent();
 						var no = $(pd).attr("no");
@@ -134,12 +147,15 @@
 
 				$(d).append(img);
 				$("<p></p>").html(g.item).appendTo(d);
-				$("<p></p>").html(g.price).appendTo(d);
-				var input_qty = $("<input type='number' value='1'>");
+				$("<p class='price'></p>").html(g.price).appendTo(d);
+				var input_qty = $("<input class='qty' type='number' value='1'>");
 				var p_qty = $("<p></p>");
 				var span_qty = $("<span></span>").html("("+g.qty+")");
 				$(p_qty).append(input_qty,span_qty);
 				$(d).append(p_qty);
+				
+				$("<input class='no' type='hidden' value='1'>").val(g.no).appendTo(d);
+				
 				//$("<p></p>").html(g.qty).appendTo(d);
 				$("#list").append(d);
 			});
@@ -155,6 +171,12 @@
 	<div id="next"><img src="resources/img/next.png"></div>
 	<hr>
 	<h4>장바구니</h4>
-	<div id="cart"></div>
+	<form action="insertOrder.do" method="post">
+		<div id="cart"></div>
+			아이디 : <input type="text" name="id" value="bsi"><br>
+			배송지 : <input type="text" name="addr"><br>
+			총구매금액 : <input type="text" name="total" id="total" value="0"><br>
+			<input type="submit" value="주문">
+	</form>
 </body>
 </html>

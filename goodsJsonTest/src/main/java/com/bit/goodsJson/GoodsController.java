@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.bit.dao.GoodsDAO;
 import com.bit.vo.GoodsVO;
+import com.bit.vo.OrderInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -19,6 +21,19 @@ public class GoodsController {
 
 	public void setDao(GoodsDAO dao) {
 		this.dao = dao;
+	}
+
+	@RequestMapping("/insertOrder.do")
+	public ModelAndView insertOrder(OrderInfo info) {
+		ModelAndView mav = new ModelAndView();
+		int re = dao.insertOrder(info);
+		String msg = "주문성공";
+		if (re != 1) {
+			msg = "주문실패";
+		}
+		mav.addObject("msg", msg);
+		return mav;
+
 	}
 
 	@RequestMapping(value = "/listGoods.do", produces = "text/plain;charset=utf-8")

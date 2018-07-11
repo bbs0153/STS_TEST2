@@ -13,6 +13,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.bit.vo.GoodsVO;
+import com.bit.vo.OrderDetailVO;
+import com.bit.vo.OrderInfo;
 
 public class GoodsManager {
 
@@ -29,6 +31,51 @@ public class GoodsManager {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
 		}
+
+	}
+
+	public static int insertOrder(OrderInfo info) {
+
+		int re = -1;
+
+		int cnt = 0;
+		int okCnt = info.getItems().size() * 2 + 1;
+
+		SqlSession session = factory.openSession();
+		// 새로운 주문을 위한 주문번호
+		// 주문상세에서 참조한다.
+		int no = session.selectOne("goods.nextOrdersNo");
+
+		HashMap orderMap = new HashMap();
+
+		orderMap.put("no", no);
+		orderMap.put("id", info.getId());
+		orderMap.put("total", info.getTotal());
+		orderMap.put("addr", info.getAddr());
+
+		cnt = cnt + session.insert("goods.goods_orders_insert", orderMap);
+
+		for (OrderDetailVO od : info.getItems()) {
+
+			HashMap detail = new HashMap();
+
+			detail.put("gno", od.getNo());
+			detail.put("qty", od.getQty());
+			detail.put("ono", no);
+
+			cnt = cnt + session.insert("goods.orders_detail_insert", detail);
+			cnt = cnt + session.update("goods.downQty", detail);
+
+		}
+
+		if (cnt == okCnt) {
+			session.commit();
+			re = 1;
+		} else {
+			session.rollback();
+		}
+		session.close();
+		return re;
 
 	}
 
