@@ -1,0 +1,10 @@
+CACHE MANIFEST
+
+CACHE:
+../js/bit.js
+../css/bit.css
+../img/ball1.jpg
+
+NETWORK:
+*
+FALLBACK:
