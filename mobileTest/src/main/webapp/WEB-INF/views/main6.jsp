@@ -12,20 +12,14 @@ minimum-scale=1.0,
 user-scalable=no">
 <link rel="shortcut-touch-icon" href="resources/img/bit.png">
 <link rel="apple-touch-icon" href="resources/img/bit.png">
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-<script type="text/javascript">
-	$(function() {
-		alert("ok")
-	});
-
-</script>
+<link rel="stylesheet" href="resources/css/bit.css">
 <title>Insert title here</title>
-
-
+<script type="text/javascript" src="resources/js/bit.js"></script>
 </head>
-<body>
-hello
+<body onload="pro()">
+	<div class="box">Hello Application Cache</div>
+	<img src="resources/img/ball1.jpg" width="200" height="200">
+	<img src="resources/img/cloth1.jpg" width="100" height="100">
+
 </body>
 </html>
