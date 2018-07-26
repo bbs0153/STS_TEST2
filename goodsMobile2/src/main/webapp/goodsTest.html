@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport"
+	content="width=device-width,
+   initial-scale=1.0,
+   maximum-scale=1.0,
+   minimum-scale=1.0,
+   user-scalable=no">
+<link rel="shortcut icon" href="resources/icon/icon.png">
+<link rel="apple-touch-icon" href="resources/icon/icon.png">
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var arr;
+		$.ajax({
+			url : "listGoods.do",
+			success : function(data) {
+				arr = eval("(" + data + ")");
+
+				$.each(arr, function(idx, g) {
+
+					var li = $("<li></li>").attr({
+						"idx" : idx
+					});
+					$(li).click(function() {
+						var idx = $(this).attr("idx");
+
+						var selG = arr[idx];
+
+						$("#fname").attr({
+							"src" : "resources/img/" + selG.fname,
+							"width" : "100",
+							"height" : "100"
+						});
+						$("#no").html("상품번호: " + selG.no);
+						$("#item").html("상품명: " + selG.item);
+						$("#price").html("상품가격: " + selG.price);
+						$("#qty").html("상품수량: " + selG.qty);
+
+					})
+
+					var a = $("<a href='#detailPage'></a>");
+					var img = $("<img></img>").attr({
+						src : "resources/img/" + g.fname,
+						width : "50",
+						height : "50"
+					});
+					var item = $("<span></span>").html(g.item);
+					$(a).append(img, item);
+					$(li).append(a);
+					$("#list").append(li);
+
+				});
+			}
+
+		});
+		$("#list").listview("refresh");
+	});
+</script>
+</head>
+<body>
+	<div data-role="page" id="homePage">
+		<div data-role="header">
+			<h1>홈</h1>
+		</div>
+		<div data-role="content">
+			<a href="#listPage" data-role="button">상품목록</a>
+		</div>
+		<div data-role="footer"></div>
+	</div>
+
+	<div data-role="page" id="listPage">
+		<div data-role="header">
+			<h1>상품목록</h1>
+		</div>
+		<div data-role="content">
+			<ul data-role="listview" id="list">
+
+			</ul>
+		</div>
+
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-icon="home"
+						data-direction="reverse">앱홈</a></li>
+					<li><a href="#insertPage" data-icon="grid"
+						data-direction="reverse">추가</a></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	<div data-role="page" id="insertPage">
+			<div data-role="header">
+				<h1>상품등록</h1>
+			</div>
+			<div data-role="content">
+				<form action="insertGoods.do" method="post" enctype="multipart/form-data" data-ajax="false">
+					<div data-role="fieldcontain">
+						<label for="no">상품번호</label>
+						<input type="number" name="no" id="no">
+					</div>
+					<div data-role="fieldcontain">
+						<label for="item">상품명</label>
+						<input type="text" name="item" id="item">
+					</div>
+					<div data-role="fieldcontain">
+						<label for="price">상품가격</label>
+						<input type="number" name="price" id="price">
+					</div>
+					<div data-role="fieldcontain">
+						<label for="qty">상품수량</label>
+						<input type="number" name="qty" id="qty">
+					</div>
+					<div data-role="fieldcontain">
+						<label for="uploadFile">이미지</label>
+						<input type="file" name="uploadFile" id="uploadFile">
+					</div>
+					<input type="submit" value="등록">
+					<input type="reset" value="취소">
+				</form>
+			</div>
+			<div data-role="footer"></div>
+		</div>
+	
+
+	<div data-role="page" id="detailPage">
+		<div data-role="header">
+			<h1>상품 상세 내용</h1>
+		</div>
+		<div data-role="content">
+			<table>
+				<tr>
+					<td><img id="fname" src=""></td>
+					<td>
+						<p id="no"></p>
+						<p id="item"></p>
+						<p id="price"></p>
+						<p id="qty"></p>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-icon="home"
+						data-direction="reverse">앱홈</a></li>
+
+					<li><a href="#listPage" data-icon="grid"
+						data-direction="reverse">목록</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
