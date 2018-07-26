@@ -1,0 +1,13 @@
+타깃이 되는 메소드가 비정상적으로 종료 되었을떄
+(즉 예외가 발생하였을때) 그 서비스명과 예외의 정보, 시간을
+db에 관리하고자 한다.
+
+순번, 서비스명, 예외정보, 요청한 시간
+
+create table ExceptionReport
+(
+	no number primary key,
+	svname varchar2(50),
+	extype varchar2(100),
+	reqtime date
+);
